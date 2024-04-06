@@ -11,14 +11,12 @@ ENV XDG_RUNTIME_DIR "/tmp"
 RUN python3 -m pip install --upgrade pip
 
 WORKDIR /
-RUN mkdir -p /python_object_detection_server
-COPY . /python_object_detection_server
+RUN mkdir -p /RT-DETR-paddle-model-build-onnx
+COPY . /RT-DETR-paddle-model-build-onnx
 
 RUN bash /python_object_detection_server/setting-scripts/install_dependencies.sh
 
-RUN pip install jupyter pandas fastapi[all] python-multipart jupyter fastapi_utils loguru onvif2-zeep icecream pycuda
-
-RUN bash /python_object_detection_server/setting-scripts/install_ffmpeg.sh
+RUN pip install pandas python-multipart paddlepaddle-gpu paddlepaddle paddle2onnx onnxruntime
 
 RUN bash /python_object_detection_server/setting-scripts/install_OpenCV.sh
 
