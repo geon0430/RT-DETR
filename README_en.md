@@ -12,11 +12,7 @@ git clone https://github.com/geon0430/RT-DETR.git
 ### 2. model pdparams Download
 - Desired model pdparams Download ([[https://github.com/lyuwenyu/RT-DETR](https://github.com/PaddlePaddle/PaddleDetection)](https://github.com/PaddlePaddle/PaddleDetection/tree /release/2.7/configs/rtdetr) Download the pdparams of the desired model from the site.
 
-### 3. pip install
-```
-pip install paddlepaddle-gpu paddlepaddle paddle2onnx onnxruntime
-```
-### 4. detect predict
+### 3. detect predict
 ```
 python tools/infer.py
  -c configs/rtdetr/rtdetr_r50vd_6x_coco.yml
@@ -24,7 +20,7 @@ python tools/infer.py
  --infer_img=/./input_images/0001.jpg --output_dir ./outputs
 ```
 
-### 5. onnx model build
+### 4. onnx model build
 - To build an onxx model, you must first create pdparams and model.pdmodel.
 - Build onnx after creating pdparams and model.pdmodel
 ```
