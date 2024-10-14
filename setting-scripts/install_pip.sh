@@ -4,4 +4,5 @@ pip install pandas \
             python-multipart \
             paddlepaddle-gpu \
             paddle2onnx \
-            onnxruntime
+            onnxruntime \
+            imgaug 
