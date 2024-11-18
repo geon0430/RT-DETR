@@ -6,7 +6,7 @@
 
 ### 1.clone 
 ```
-git clone https://github.com/geon0430/RT-DETR.git
+git clone https://github.com/geon0430/rt-detr-paddle-build-onnx-tensorrt.git
 ```
 
 ### 4. onnx model build
@@ -15,4 +15,13 @@ git clone https://github.com/geon0430/RT-DETR.git
 ```
 bash create_pdmodel.sh
 bash create_onnx.sh
+```
+### 5. tensorrt build
+- To build an tensorrt model, you must first create onnx
+```
+bash create_tensorrt.sh
+```
+### 6. trt model predict test
+```
+python utils/trt_predict.py
 ```
