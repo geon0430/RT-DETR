@@ -17,3 +17,16 @@ git clone https://github.com/geon0430/RT-DETR.git
 bash create_pdmodel.sh
 bash create_onnx.sh
 ```
+### 5. tensorrt build
+- onnx모델을 만든 후 trt 모델 빌드
+```
+bash create_tensorrt.sh
+```
+- trt 모델 입력 타입
+```
+input_data = {
+                'image': pp_image
+                'scale_factor'
+                'im_shape'
+            }
+```
