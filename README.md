@@ -26,3 +26,7 @@ bash create_tensorrt.sh
 ```
 python utils/trt_predict.py
 ```
+``
+|Input_data |Result_data |
+|:--------------:|:--------------:|
+| ![1](https://github.com/user-attachments/assets/eaf1e9a5-379c-46b5-bdc7-d52845cd6667) | ![result](https://github.com/user-attachments/assets/d190f415-9447-49bb-bc6d-ab3141648870) |
