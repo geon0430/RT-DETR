@@ -1,6 +1,6 @@
 # RT-DETR
 [English](https://github.com/geon0430/rt-detr-paddle-build-onnx-tensorrt/blob/main/README_en.md)
-- Paddle 모델을 ONNX모델로 변환하여 Paddle package를 사용하지 않고 Pytorch나 TensorRT로 사용하는 것이 목적
+- Paddle 모델을 ONNX모델로 변환하여 Paddle package를 사용하지 않고 Onnx 또는 TensorRT로 사용하는 것이 목적
 - ONNX는 서로 다른 딥러닝 프레임워크에서 동일한 모델을 읽어와서 사용할 수 있도록 표준화 하는 패키지로 ONNX 모델을 사용할 경우 우리가 직접 소스코드를 작성하여  Paddle package를 사용하지 않고 모델을 사용 할 수 있음
 
 
