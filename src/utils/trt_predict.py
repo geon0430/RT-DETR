@@ -5,31 +5,42 @@ import numpy as np
 import cupy as cp
 import configparser
 from typing import Any, Tuple, Dict, List
-from rtdetr_trt import RT_DETR_CP
 import cucim.skimage.transform
 from process import preprocess, postprocess
 from logger import setup_logger
+import tensorrt as trt
+
+def get_rtdetr_class() -> Any:
+    tensorrt_version = trt.__version__.split(".")[0]  
+    if tensorrt_version == "8":
+        from rtdetr_trt import RT_DETR_CP_TensorRT_8
+        return RT_DETR_CP_TensorRT_8
+    elif tensorrt_version == "10":
+        from rtdetr_trt import RT_DETR_CP_TensorRT_10
+        return RT_DETR_CP_TensorRT_10
+    else:
+        raise RuntimeError(f"Unsupported TensorRT version: {trt.__version__}")
+
+RT_DETR_CP = get_rtdetr_class()
 
 def rtdetr_trt_predict():
-    
     input_image_path = "/rt-detr-paddle-build-onnx-tensorrt/src/volume/1.jpg"
     output_image_path = "result.jpg"
-    
+
     config_path = "/rt-detr-paddle-build-onnx-tensorrt/src/utils/config.ini"
     config = configparser.ConfigParser()
     config.read(config_path)
     logger = setup_logger(config)
-    
+
     ## RTDETR ##
-    batch: int = config.getint('RTDETR','BATCH')
-    channel: int = config.getint('RTDETR','CHANNEL')
-    gpu: int = config.getint('RTDETR','GPU')
+    batch: int = config.getint('RTDETR', 'BATCH')
+    channel: int = config.getint('RTDETR', 'CHANNEL')
+    gpu: int = config.getint('RTDETR', 'GPU')
     rtdetr_model_path: str = config['RTDETR']['MODEL_PATH']
     config_path: str = config['RTDETR']['CLASS_CONFIG_PATH']
-    model_height: int = config.getint('RTDETR','MODEL_HEIGHT')
-    model_width: int = config.getint('RTDETR','MODEL_WIDTH')
-    
-    
+    model_height: int = config.getint('RTDETR', 'MODEL_HEIGHT')
+    model_width: int = config.getint('RTDETR', 'MODEL_WIDTH')
+
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
     label_list = config['label_list']
@@ -62,6 +73,7 @@ def rtdetr_trt_predict():
             order=1
         )
         logger.info(f"Resize Data : {resized_BGR_image_gpu.size}, shape: {resized_BGR_image_gpu.shape}, type: {type(resized_BGR_image_gpu)}{resized_BGR_image_gpu.dtype}")
+        
         # Preprocess
         pp_image = preprocess(
             image_data=resized_BGR_image_gpu,
@@ -106,5 +118,4 @@ def rtdetr_trt_predict():
         print(f"Result saved to {output_image_path}")
 
 if __name__ == "__main__":
-    
     rtdetr_trt_predict()
