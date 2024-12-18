@@ -12,10 +12,10 @@ from logger import setup_logger
 
 def rtdetr_trt_predict():
     
-    input_image_path = "/rt-detr-paddle-model-build-onnx/src/volume/1.jpg"
+    input_image_path = "/rt-detr-paddle-build-onnx-tensorrt/src/volume/1.jpg"
     output_image_path = "result.jpg"
     
-    config_path = "/rt-detr-paddle-model-build-onnx/src/utils/config.ini"
+    config_path = "/rt-detr-paddle-build-onnx-tensorrt/src/utils/config.ini"
     config = configparser.ConfigParser()
     config.read(config_path)
     logger = setup_logger(config)
