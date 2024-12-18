@@ -13,8 +13,8 @@ docker run \
     -p ${port_num}8888:8888 \
     --name ${CONTAINER_NAME} \
     --privileged \
-    -v ${code_path}:/rt-detr-paddle-model-build-onnx \
+    -v ${code_path}:/rt-detr-paddle-build-onnx-tensorrt \
     --shm-size 5g \
     --restart=always \
-    -w /rt-detr-paddle-model-build-onnx \
+    -w /rt-detr-paddle-build-onnx-tensorrt \
     ${IMAGE_NAME}:${TAG}
