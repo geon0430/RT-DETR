@@ -7,6 +7,5 @@ pip install pandas \
             onnxruntime \
             imgaug \
             wandb \
-            opencv-python \
             lap \
             motmetrics
