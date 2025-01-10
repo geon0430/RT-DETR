@@ -1,28 +1,97 @@
 # RT-DETR
 [English](https://github.com/geon0430/rt-detr-paddle-build-onnx-tensorrt/blob/main/README_en.md)
+- SOTA 모델급 객체인식 모델들은 다 라이센스 문제로 회사에서 사용이 불가능함
+- 라이센스 문제 없는 Paddle Detection으로 학습 혹은 fine turning 된 모델을 사용하여 객체인식을 사용함
 - Paddle 모델을 ONNX모델로 변환하여 Paddle package를 사용하지 않고 Onnx 또는 TensorRT로 사용하는 것이 목적
 - ONNX는 서로 다른 딥러닝 프레임워크에서 동일한 모델을 읽어와서 사용할 수 있도록 표준화 하는 패키지로 ONNX 모델을 사용할 경우 우리가 직접 소스코드를 작성하여  Paddle package를 사용하지 않고 모델을 사용 할 수 있음
 
 
-### 1.clone 
-```
-git clone https://github.com/geon0430/rt-detr-paddle-build-onnx-tensorrt.git
-```
+## Train 
+### 1. 학습을 진행하기 위해서 먼저 fine turning 모델을 선택한다.
+| Model | Epoch | Backbone  | Input shape | $AP^{val}$ | $AP^{val}_{50}$| Params(M) | FLOPs(G) |  T4 TensorRT FP16(FPS) | Pretrained Model | config |
+|:--------------:|:-----:|:----------:| :-------:|:--------------------------:|:---------------------------:|:---------:|:--------:| :---------------------: |:------------------------------------------------------------------------------------:|:-------------------------------------------:|
+| RT-DETR-R18 | 6x |  ResNet-18 | 640 | 46.5 | 63.8 | 20 | 60 | 217 | [download](https://bj.bcebos.com/v1/paddledet/models/rtdetr_r18vd_dec3_6x_coco.pdparams) | [config](./rtdetr_r18vd_6x_coco.yml)
+| RT-DETR-R34 | 6x |  ResNet-34 | 640 | 48.9 | 66.8 | 31 | 92 | 161 | [download](https://bj.bcebos.com/v1/paddledet/models/rtdetr_r34vd_dec4_6x_coco.pdparams) | [config](./rtdetr_r34vd_6x_coco.yml)
+| RT-DETR-R50-m | 6x |  ResNet-50 | 640 | 51.3 | 69.6 | 36 | 100 | 145 | [download](https://bj.bcebos.com/v1/paddledet/models/rtdetr_r50vd_m_6x_coco.pdparams) | [config](./rtdetr_r50vd_m_6x_coco.yml)
+| RT-DETR-R50 | 6x |  ResNet-50 | 640 | 53.1 | 71.3 | 42 | 136 | 108 | [download](https://bj.bcebos.com/v1/paddledet/models/rtdetr_r50vd_6x_coco.pdparams) | [config](./rtdetr_r50vd_6x_coco.yml)
+| RT-DETR-R101 | 6x |  ResNet-101 | 640 | 54.3 | 72.7 | 76 | 259 | 74 | [download](https://bj.bcebos.com/v1/paddledet/models/rtdetr_r101vd_6x_coco.pdparams) | [config](./rtdetr_r101vd_6x_coco.yml)
+| RT-DETR-L | 6x |  HGNetv2 | 640 | 53.0 | 71.6 | 32 | 110 | 114 | [download](https://bj.bcebos.com/v1/paddledet/models/rtdetr_hgnetv2_l_6x_coco.pdparams) | [config](rtdetr_hgnetv2_l_6x_coco.yml)
+| RT-DETR-X | 6x |  HGNetv2 | 640 | 54.8 | 73.1 | 67 | 234 | 74 | [download](https://bj.bcebos.com/v1/paddledet/models/rtdetr_hgnetv2_x_6x_coco.pdparams) | [config](rtdetr_hgnetv2_x_6x_coco.yml)
+| RT-DETR-H | 6x |  HGNetv2 | 640 | 56.3 | 74.8 | 123 | 490 | 40 | [download](https://bj.bcebos.com/v1/paddledet/models/rtdetr_hgnetv2_h_6x_coco.pdparams) | [config](rtdetr_hgnetv2_h_6x_coco.yml)
 
 
-### 4. onnx model build
+###  2.  fine turning 모델을 선택했으면 "configs/rtdetr/rtdetr_r50vd_6x_coco.yml" 경로에 들어가 모델의 yaml파일을 찾아들어간다
+- coco datasets으로 fine turning된 모델을 만들려면 _BASE_: [ '../datasets/coco_detection.yml' ] 으로 입력한다.
+- custom datasets으로 특정 객체인식 모델을 만들려면  _BASE_: [ '../datasets/custom_dataset.yml' ] 으로 입력한다.
+
+##  custom model 학습 방법 
+### 2, dataset 구성
+- coco dataset 형식으로 데이터셋을 준비해야함
+```
+ dataset/
+├── annotations/
+│   ├── instances_train.json
+│   ├── instances_val.json
+│   ├── instances_test.json
+├── train/
+│   ├── image1.jpg
+│   ├── image2.jpg
+├── val/
+│   ├── image3.jpg
+│   ├── image4.jpg
+├── test/
+    ├── image5.jpg
+    ├── image6.jpg
+```
+### 3. dataset yaml 작성
+- src/PaddleDetection/configs/datasets/custom_dataset.yml 파일에서 데이터셋 위치를 지정함
+```
+ ### src/PaddleDetection/configs/datasets/custom_dataset.yml
+metric: COCO
+num_classes: 4
+
+TrainDataset:
+    name : COCODataSet
+    image_dir: train
+    anno_path: annotations/train_datasets.json
+    dataset_dir: /rt-detr-paddle-build-onnx-tensorrt/src/PaddleDetection/dataset
+    data_fields: ['image', 'gt_bbox', 'gt_class', 'is_crowd']
+
+EvalDataset:
+    name : COCODataSet
+    image_dir: val
+    anno_path: annotations/valid_datasets.json
+    dataset_dir: /rt-detr-paddle-build-onnx-tensorrt/src/PaddleDetection/dataset
+    allow_empty: true
+
+TestDataset:
+    name : COCODataSet
+    image_dir: test
+    anno_path: annotations/test_datasets.json
+    dataset_dir: /rt-detr-paddle-build-onnx-tensorrt/src/PaddleDetection/dataset 
+```
+
+### 4. train
+- 학습을 진행함 -> 학습 결과로 pdparams 가 생성됨 
+```
+export CUDA_VISIBLE_DEVICES=0,1 ## 사용할 gpu 압력
+python -m paddle.distributed.launch --gpus 0,1 tools/train.py -c configs/rtdetr/rtdetr_r50vd_6x_coco.yml --fleet --eval
+```
+
+## Build
+### 1. onnx model build
 - onxx 모델 빌드 하기 위해선 pdparams,  model.pdmodel 을 먼저 만들어야함
 - pdparams,  model.pdmodel 생성 후 onnx 빌드
 ```
 bash create_pdmodel.sh
 bash create_onnx.sh
 ```
-### 5. tensorrt build
+### 2. tensorrt build
 - onnx모델을 만든 후 trt 모델 빌드
 ```
 bash create_tensorrt.sh
 ```
-### 6. trt model predict test
+### 3. trt model predict test
 ```
 python utils/trt_predict.py
 ```
