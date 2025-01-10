@@ -71,8 +71,13 @@ TestDataset:
 ```
 
 ### 4. train
-- 학습을 진행함 -> 학습 결과로 pdparams 가 생성됨 
+- wandb를 사용할려면 학습을 진행하기 전 wandb api를 등록 후 --use_wandb True를 추가한다.
 ```
+wandb login
+```
+
+- 학습 결과로 pdparams 가 생성됨 
+``` 
 export CUDA_VISIBLE_DEVICES=0,1 ## 사용할 gpu 압력
 python -m paddle.distributed.launch --gpus 0,1 tools/train.py -c configs/rtdetr/rtdetr_r50vd_6x_coco.yml --fleet --eval
 ```
