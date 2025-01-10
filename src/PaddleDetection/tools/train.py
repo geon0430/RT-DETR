@@ -15,7 +15,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-import torch
+
 import os
 import sys
 
@@ -114,34 +114,10 @@ def parse_args():
         action='store_true',
         default=False,
         help="Enable dy2st to train.")
-    parser.add_argument(
-        "--save_pt",
-        action='store_true',
-        default=False,
-        help="Save model in PyTorch .pt format after each epoch.")
 
     args = parser.parse_args()
     return args
-    
-def save_model_as_pt(trainer, epoch, output_dir):
-    """
-    Save the current model as a .pt file.
-    Args:
-        trainer: Trainer object containing the Paddle model.
-        epoch (int): Current epoch number.
-        output_dir (str): Directory to save the .pt file.
-    """
-    # Convert Paddle model to PyTorch
-    paddle_model = trainer.model
-    state_dict = {k: v.numpy() for k, v in paddle_model.state_dict().items()}
-    torch_model = torch.nn.Module()
-    torch_model.load_state_dict(state_dict, strict=False)
 
-    # Save as .pt
-    pt_filename = f"train_epoch_{epoch}.pt"
-    pt_path = os.path.join(output_dir, pt_filename)
-    torch.save(torch_model.state_dict(), pt_path)
-    logger.info(f"Saved PyTorch model for epoch {epoch}: {pt_path}")
 
 def run(FLAGS, cfg):
     # init fleet environment
@@ -182,11 +158,7 @@ def run(FLAGS, cfg):
         trainer.load_weights(cfg.pretrain_weights)
 
     # training
-    for epoch in range(cfg.epoch):
-        trainer.train(FLAGS.eval)
-        if FLAGS.save_pt:
-            output_dir = cfg.get("save_dir", "./output/best_model")
-            save_model_as_pt(trainer, epoch + 1, output_dir) 
+    trainer.train(FLAGS.eval)
 
 
 def main():
