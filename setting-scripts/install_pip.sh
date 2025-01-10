@@ -5,4 +5,8 @@ pip install pandas \
             paddlepaddle-gpu \
             paddle2onnx \
             onnxruntime \
-            imgaug 
+            imgaug \
+            wandb \
+            opencv-python \
+            lap \
+            motmetrics
