@@ -1,5 +1,4 @@
 # RT-DETR
-[English](https://github.com/geon0430/rt-detr-paddle-build-onnx-tensorrt/blob/main/README_en.md)
 - SOTA 모델급 객체인식 모델들은 다 라이센스 문제로 회사에서 사용이 불가능함
 - 라이센스 문제 없는 Paddle Detection으로 학습 혹은 fine turning 된 모델을 사용하여 객체인식을 사용함
 - Paddle 모델을 ONNX모델로 변환하여 Paddle package를 사용하지 않고 Onnx 또는 TensorRT로 사용하는 것이 목적
