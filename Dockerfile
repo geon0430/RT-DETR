@@ -9,5 +9,6 @@ ENV NVIDIA_DRIVER_CAPABILITIES all
 COPY . /rt-detr-paddle-build-onnx-tensorrt
 
 RUN bash /rt-detr-paddle-build-onnx-tensorrt/setting-scripts/install_dependencies.sh
+RUN bash /rt-detr-paddle-build-onnx-tensorrt/setting-scripts/install_opencv.sh
 RUN bash /rt-detr-paddle-build-onnx-tensorrt/setting-scripts/install_pip.sh
 
