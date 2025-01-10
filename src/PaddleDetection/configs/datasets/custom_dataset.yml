@@ -1,0 +1,22 @@
+metric: COCO
+num_classes: 4
+
+TrainDataset:
+    name : COCODataSet
+    image_dir: train
+    anno_path: annotations/train_datasets.json
+    dataset_dir: /rt-detr-paddle-build-onnx-tensorrt/src/PaddleDetection/dataset
+    data_fields: ['image', 'gt_bbox', 'gt_class', 'is_crowd']
+
+EvalDataset:
+    name : COCODataSet
+    image_dir: val
+    anno_path: annotations/valid_datasets.json
+    dataset_dir: /rt-detr-paddle-build-onnx-tensorrt/src/PaddleDetection/dataset
+    allow_empty: true
+
+TestDataset:
+    name : COCODataSet
+    image_dir: test
+    anno_path: annotations/test_datasets.json
+    dataset_dir: /rt-detr-paddle-build-onnx-tensorrt/src/PaddleDetection/dataset 
