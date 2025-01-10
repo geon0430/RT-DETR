@@ -1,5 +1,5 @@
 _BASE_: [
-  '../datasets/coco_detection.yml',
+  '../datasets/custom_dataset.yml',
   '../runtime.yml',
   '_base_/optimizer_6x.yml',
   '_base_/rtdetr_r50vd.yml',
