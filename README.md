@@ -77,7 +77,8 @@ wandb login
 ```
 
 - 학습 결과로 pdparams 가 생성됨 
-``` 
+```
+cd /rt-detr-paddle-build-onnx-tensorrt/src/PaddleDetection
 export CUDA_VISIBLE_DEVICES=0,1 ## 사용할 gpu 압력
 python -m paddle.distributed.launch --gpus 0,1 tools/train.py -c configs/rtdetr/rtdetr_r50vd_6x_coco.yml --fleet --eval
 ```
