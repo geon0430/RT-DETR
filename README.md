@@ -1,4 +1,5 @@
 # RT-DETR
+[English](https://github.com/geon0430/RT-DETR/blob/main/README_en.md)
 - 라이센스 문제 없는 PaddleDetection의 RT-DETR 모델로 custom_dataset으로 train하여 onnx, tensorrt로 사용
 
 
